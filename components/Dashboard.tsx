@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import * as React from 'react';
+import { useMemo, useState } from 'react';
 import { Task } from '../types';
 import { PixelCard } from './ui/PixelCard';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';

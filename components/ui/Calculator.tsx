@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Delete, Equal } from 'lucide-react';
 
@@ -29,18 +30,79 @@ export const Calculator: React.FC = () => {
     }
   };
 
-  const calculate = () => {
+  const safeCalculate = (input: string) => {
     try {
-      // eslint-disable-next-line no-eval
-      const res = eval(expression.replace(/x/g, '*'));
-      setDisplay(String(res));
-      setExpression(String(res));
-      setIsResult(true);
+      // 1. Tokenize: Match numbers (including decimals) or operators
+      const tokens = input.match(/(\d+(\.\d+)?)|[+\-*/]/g);
+      if (!tokens) return 'Err';
+
+      // 2. Handle Unary operations (e.g. 5 * - 3 -> 5 * -3)
+      const mergedTokens: string[] = [];
+      for (let i = 0; i < tokens.length; i++) {
+        const t = tokens[i];
+        
+        // Check if this token is a unary minus
+        // Occurs if t is '-' and (it's the first token OR previous token was an operator)
+        if (t === '-' && (mergedTokens.length === 0 || ['+', '-', '*', '/'].includes(mergedTokens[mergedTokens.length - 1]))) {
+            const nextNum = tokens[i + 1];
+            if (nextNum && !['+', '-', '*', '/'].includes(nextNum)) {
+                mergedTokens.push('-' + nextNum);
+                i++; // Skip next since we consumed it
+            } else {
+                throw new Error('Syntax');
+            }
+        } else {
+            mergedTokens.push(t);
+        }
+      }
+
+      // 3. Pass 1: Multiplication and Division
+      let pass1: string[] = [];
+      for (let i = 0; i < mergedTokens.length; i++) {
+          const t = mergedTokens[i];
+          if (t === '*' || t === '/') {
+              const prev = pass1.pop();
+              const next = mergedTokens[i+1];
+              if (!prev || !next) throw new Error('Syntax');
+              
+              const a = parseFloat(prev);
+              const b = parseFloat(next);
+              
+              let res = 0;
+              if (t === '*') res = a * b;
+              if (t === '/') res = b === 0 ? Infinity : a / b;
+              
+              pass1.push(res.toString());
+              i++; // skip next
+          } else {
+              pass1.push(t);
+          }
+      }
+
+      if (pass1.length === 0) return '0';
+
+      // 4. Pass 2: Addition and Subtraction
+      let result = parseFloat(pass1[0]);
+      for (let i = 1; i < pass1.length; i += 2) {
+          const op = pass1[i];
+          const next = parseFloat(pass1[i+1]);
+          if (isNaN(next)) throw new Error('Syntax');
+          
+          if (op === '+') result += next;
+          else if (op === '-') result -= next;
+      }
+      
+      return isFinite(result) ? String(result) : 'Err';
     } catch (e) {
-      setDisplay('Err');
-      setExpression('');
-      setIsResult(true);
+      return 'Err';
     }
+  };
+
+  const calculate = () => {
+    const res = safeCalculate(expression.replace(/x/g, '*'));
+    setDisplay(res);
+    setExpression(res);
+    setIsResult(true);
   };
 
   const clear = () => {

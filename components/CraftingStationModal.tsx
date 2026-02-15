@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calculator as CalcIcon, Apple, Utensils, Plus } from 'lucide-react';
 import { Calculator } from './ui/Calculator';

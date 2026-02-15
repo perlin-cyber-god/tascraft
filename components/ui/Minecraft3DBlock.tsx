@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { motion } from 'framer-motion';
 
 export type BlockType = 'grass' | 'dirt' | 'stone' | 'cobblestone' | 'furnace' | 'furnace_active' | 'tnt' | 'diamond_ore' | 'gold_block' | 'iron_block' | 'diamond_block' | 'crafting_table';

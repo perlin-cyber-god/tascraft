@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import * as React from 'react';
+import { useMemo } from 'react';
 
 export const Particles: React.FC = () => {
   // Generate random particles with varying properties

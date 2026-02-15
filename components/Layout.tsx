@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { CustomCursor } from './ui/CustomCursor';
 import { WeatherEffects } from './ui/WeatherEffects';

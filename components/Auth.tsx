@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { PixelCard } from './ui/PixelCard';
 import { motion } from 'framer-motion';

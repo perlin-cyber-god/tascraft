@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Task, TaskCategory } from '../types';
 import { Check, Trash2, Calendar, Edit2, Clock } from 'lucide-react';
